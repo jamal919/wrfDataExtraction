@@ -1,4 +1,4 @@
-function [ lat, lon, meshLat, meshLon ] = GetLatLonGrid( wrfOutFile )
+function [ lon, lat, meshLon, meshLat ] = GetLatLonGrid( wrfOutFile )
 %GetLatLonGrid Return the latitude and longitude points form the
 %wrfoutFile.
 %   [lat, lon, meshLat, meshLon] = GetLatLonGrid( wrfOutFile) reads the

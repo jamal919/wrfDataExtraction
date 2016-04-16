@@ -10,10 +10,10 @@ TRMMGRID = 0.25;
 [inFileName, inFileLoc] =  ReadFile('Select the nc file', '*.nc');
 
 % lat lon and meshes
-[lat, lon, meshLat, meshLon] = GetLatLonGrid(inFileLoc);
+[lon, lat, meshLon, meshLat] = GetLatLonGrid(inFileLoc);
 
 fprintf('Model domain is bounded by %f to %f latitude.\n', min(lat), max(lat));
-fprintf('And %f to %f in longitude.\n', min(lon), max(lon));
+fprintf('\t\t\tAnd %f to %f in longitude.\n', min(lon), max(lon));
 
 % time and time steps
 [times, nTimeStep, minuteElapsed] = GetTimes(inFileLoc);
@@ -22,8 +22,9 @@ fprintf('And %f to %f in longitude.\n', min(lon), max(lon));
 outFileName = [inFileName, '.csv'];
 
 % TRMM Grid
-trmmLat = -50.0 : TRMMGRID : 50.0;
-trmmLon = -180.0 : TRMMGRID : 180.0;
+% From TRMM nc file
+trmmLon = 0.1250 : TRMMGRID : 359.8750;
+trmmLat = -49.8750 : TRMMGRID : 49.8750;
 
 % lat-lon range of interest
 lonW = input('Enter longitude of the west end in degree east : ');
@@ -40,14 +41,15 @@ latN = input('Enter latitude of the north end in degree north : ');
 [lonE, ~] = FindClosest(trmmLon, lonE);
 
 % lat lon of interst
-latOut = latS : TRMMGRID : latN;
-lonOut = lonW : TRMMGRID : lonE;
+lonOut = lonW : TRMMGRID : lonE; % x
+latOut = latS : TRMMGRID : latN; % y
+[meshLonOut, meshLatOut] = meshgrid(lonOut, latOut);
 
 % Creating output format
 outPosition = zeros(2, length(lonOut)*length(latOut));
 for i = 1 : length(latOut)
-    outPosition(1, (i-1)*length(lonOut) + 1 : i * length(lonOut)) = ones(1, length(lonOut)) * latOut(i);
-    outPosition(2, (i -1) * length(lonOut) + 1 : i * length(lonOut)) = lonOut;
+    outPosition(1, (i-1)*length(lonOut) + 1 : i * length(lonOut)) = ones(1, length(lonOut))*latOut(i);
+    outPosition(2, (i-1)*length(lonOut) + 1 : i * length(lonOut)) = lonOut;
 end
 
 % Create headers
@@ -88,24 +90,22 @@ for timeStep = 1 : nTimeStep
     end
     
     outChunk = cell(1, length(outPosition) + 1);
-    outChunk{1} = datestr(times{timeStep});
+    outChunk{1} = datestr(times{timeStep}, 'dd/MM/yyyy hh:mm:ss');
     
     % Interpolation of data
-    [X, Y] = meshgrid(latOut, lonOut);
-    precipInterp = griddata(double(meshLon'), double(meshLat'), double(precip'), X, Y);
+    precipInterp = griddata(double(meshLon), double(meshLat), double(precip), meshLonOut, meshLatOut);
     
     
     % Reading precipitation only
     for i = 1 : length(outPosition)
         % position is in latitude, longitude format in i th column
-        varData = precipInterp(find(lonOut == outPosition(2, i)), find(latOut == outPosition(1, i)));
-        outChunk{1, i + 1} = varData;
+        outChunk{1, i + 1} = precipInterp(find(lonOut == outPosition(2, i)), find(latOut == outPosition(1, i)));
     end
     
     % Writing data to file
     fprintf(fid, stringFormat, outChunk{1, :});
-    
-    fprintf('Timestep %d of %d - Completed.\n', timeStep, nTimeStep);
+    msg = ['Timestep ', num2str(timeStep), ' of ', num2str(nTimeStep), ' - Completed.'];
+    disp(msg);
 end
 
 % Completion message
