@@ -1,0 +1,20 @@
+Program Installation:
+    The folder contains all the necessary functions for program. However to 
+add the path of the functions to call them from anywehre use the following 
+command in the matlab prompt - 
+
+>>> addpath('path_to_the_folder', '-end');
+
+How to use:
+
+To extract data run the script called "scriptHecHMSDataPrep.m". Either run
+it from the graphical interface using F5 or use the following command in the
+command prompt -
+
+>>> scriptHecHMSDataPrep
+
+It will ask for a file with .nc ending. It will invoke the graphical or text 
+input as required. 
+
+Give the bounding box of the range to be extracted, and a csv file will be
+created for the points available and conforming with the TRMM grid points.

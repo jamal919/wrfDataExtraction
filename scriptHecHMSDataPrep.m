@@ -12,8 +12,8 @@ TRMMGRID = 0.25;
 % lat lon and meshes
 [lon, lat, meshLon, meshLat] = GetLatLonGrid(inFileLoc);
 
-fprintf('Model domain is bounded by %f to %f latitude.\n', min(lat), max(lat));
-fprintf('\t\t\tAnd %f to %f in longitude.\n', min(lon), max(lon));
+fprintf('Model domain is bounded by %f to %f longitude.\n', min(lon), max(lon));
+fprintf('\t\t\tAnd %f to %f in latitude.\n', min(lat), max(lat));
 
 % time and time steps
 [times, nTimeStep, minuteElapsed] = GetTimes(inFileLoc);
