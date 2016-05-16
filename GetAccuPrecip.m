@@ -27,19 +27,37 @@ raincFull = ncread(wrfOutFile, RAINC);
 rainshFull = ncread(wrfOutFile, RAINSH);
 
 % Reading time step
-hail = hailFull(:, :, timeStep);
-graupelnc = graupelncFull(:, :, timeStep);
-snow = snowFull(:, :, timeStep);
-rainnc = rainncFull(:, :, timeStep);
-rainc = raincFull(:, :, timeStep);
-rainsh = rainshFull(:, :, timeStep);
+if nargin == 2
+    hail = hailFull(:, :, timeStep);
+    graupelnc = graupelncFull(:, :, timeStep);
+    snow = snowFull(:, :, timeStep);
+    rainnc = rainncFull(:, :, timeStep);
+    rainc = raincFull(:, :, timeStep);
+    rainsh = rainshFull(:, :, timeStep);
 
-% Returning the output values
-% Total precipitation is taken as the sum of all kind of percipitation
-precip = hail + graupelnc + snow + rainnc + rainc + rainsh;
+    % Returning the output values
+    % Total precipitation is taken as the sum of all kind of percipitation
+    precip = hail + graupelnc + snow + rainnc + rainc + rainsh;
 
-% NC and C rain.
-ncPrecip = rainnc;
-cPrecip = rainc;
+    % NC and C rain.
+    ncPrecip = rainnc;
+    cPrecip = rainc;
+elseif nargin == 1
+    hail = hailFull(:, :, :);
+    graupelnc = graupelncFull(:, :, :);
+    snow = snowFull(:, :, :);
+    rainnc = rainncFull(:, :, :);
+    rainc = raincFull(:, :, :);
+    rainsh = rainshFull(:, :, :);
 
+    % Returning the output values
+    % Total precipitation is taken as the sum of all kind of percipitation
+    precip = hail + graupelnc + snow + rainnc + rainc + rainsh;
+
+    % NC and C rain.
+    ncPrecip = rainnc;
+    cPrecip = rainc; 
+else
+    error('ERROR: Argument mismatch.')
+end
 end
