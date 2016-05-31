@@ -93,7 +93,7 @@ for timeStep = 1 : nTimeStep
     outChunk{1} = datestr(times{timeStep}, 'dd/MM/yyyy hh:mm:ss');
     
     % Interpolation of data
-    precipInterp = griddata(double(meshLon), double(meshLat), double(precip), meshLonOut, meshLatOut);
+    precipInterp = griddata(double(meshLon), double(meshLat), double(precip), meshLonOut', meshLatOut');
     
     
     % Reading precipitation only
