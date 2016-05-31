@@ -90,7 +90,7 @@ for timeStep = 1 : nTimeStep
     end
     
     outChunk = cell(1, length(outPosition) + 1);
-    outChunk{1} = datestr(times{timeStep}, 'dd/MM/yyyy hh:mm:ss');
+    outChunk{1} = datestr(times{timeStep}, 'yyyy-mm-dd HH:MM:SS');
     
     % Interpolation of data
     precipInterp = griddata(double(meshLon), double(meshLat), double(precip), meshLonOut', meshLatOut');
